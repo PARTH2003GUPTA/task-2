@@ -1,0 +1,12 @@
+mat-toolbar {
+  display: flex;
+  justify-content: flex-end; 
+}
+
+.spacer {
+  flex: 1; 
+}
+
+.username {
+  margin-left: 10px;
+}

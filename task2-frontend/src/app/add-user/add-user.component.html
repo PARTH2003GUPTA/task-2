@@ -1,0 +1,76 @@
+<div class="add-container">
+    <div class="dialog-container">
+      <h2 class="form-title">Add New User</h2>
+      <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Enter username</mat-label>
+          <input matInput placeholder="Enter username" formControlName="username" />
+          <mat-error *ngIf="addUserForm.get('username')?.invalid && addUserForm.get('username')?.touched">
+            Username is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Enter your password</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="addUserForm.get('password')?.invalid && addUserForm.get('password')?.touched">
+            Password is required and must be at least 8 characters long.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Confirm your password</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="addUserForm.get('confirmPassword')?.invalid && addUserForm.get('confirmPassword')?.touched">
+            Confirm Password is required.
+          </mat-error>
+          <mat-error *ngIf="addUserForm.hasError('mismatch') && addUserForm.get('confirmPassword')?.touched">
+            Passwords do not match.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Select role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option value="manager">Manager</mat-option>
+            <mat-option value="siteadmin">Site Admin</mat-option>
+            <mat-option value="operator">Operator</mat-option>
+          </mat-select>
+          <mat-error *ngIf="addUserForm.get('role')?.invalid && addUserForm.get('role')?.touched">
+            Role is required.
+          </mat-error>
+        </mat-form-field>
+
+  
+        <div class="button-container">
+          <button mat-raised-button color="primary" type="submit" [disabled]="addUserForm.invalid">
+            Add User
+          </button>
+          <button mat-button color="warn" type="button" (click)="onCancel()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

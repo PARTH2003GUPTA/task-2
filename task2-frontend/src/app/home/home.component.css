@@ -1,0 +1,28 @@
+.table-container {
+    margin: 20px;
+  }
+  
+  mat-table {
+    width: 100%;
+  }
+  
+  mat-header-cell, mat-cell {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .username {
+    margin-left: auto;
+    padding-right: 10px;
+    font-weight: bold;
+  }
+  
+
+  .search-container {
+    margin: 20px 0;
+  }
+  
+  .search-field {
+    width: 200px;
+  }
+  
