@@ -11,24 +11,30 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { HttpClient } from '@angular/common/http';
 import { error } from 'console';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NavbarComponent, MatTableModule, MatButtonModule, MatToolbarModule, MatInputModule, FormsModule, MatIconModule, AddUserComponent],
+  imports: [NavbarComponent, MatTableModule, MatButtonModule, MatToolbarModule, MatInputModule, FormsModule, MatIconModule, AddUserComponent,CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
   
   list: MatTableDataSource<User>;
-  displayedColumns: string[] = ['username', 'password', 'role', 'edit','delete']; 
+  displayedColumns: string[] = ['username', 'password', 'role']; 
   filterValue: any = "";
+  roleBylocal:any="";
+  
+  
 
   constructor(private userlistObj: UserListService, private dialog: MatDialog, private http: HttpClient) {
     this.list = new MatTableDataSource(userlistObj.userlist);
+    this.roleBylocal=localStorage.getItem('role');
   }
-
+  
   reloadData(){
     const url = "http://localhost:8080/user";
     this.http.get<any[]>(url).subscribe({
@@ -51,7 +57,16 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.reloadData();
+    this.updateDisplayedColumns();
   }
+  updateDisplayedColumns() {
+    // Check role and conditionally add columns
+    if (this.roleBylocal && this.roleBylocal !== 'operator') {
+      // Only add 'edit' and 'delete' columns if the role is not 'operator'
+      this.displayedColumns.push('edit', 'delete');
+    }
+  }
+
   
 
   addUser(timepass:any) {
@@ -95,6 +110,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+  
 
   deleteUser(user:User){
 
@@ -111,8 +127,6 @@ export class HomeComponent implements OnInit {
         console.log(error)
       }
     })
-    
-
 
 
   }

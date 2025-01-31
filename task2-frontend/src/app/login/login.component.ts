@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { User } from '../user-list.service';
 
 @Component({
   selector: 'app-login',
@@ -21,30 +22,46 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     MatButtonModule,
     FormsModule,
     RouterModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   username: string = '';
   password: string = '';
+  role: string = '';
   hide = true;
   private apiurl = 'http://localhost:8080/user/login';
 
-  constructor(private router: Router, private auth: AuthService, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private http: HttpClient
+  ) {}
 
   login() {
     const user = { username: this.username, password: this.password };
 
-    this.http.post(this.apiurl, user,{ responseType: 'text' }).subscribe({
-      next: (res) => {
-        alert("Successfully loggedIn");
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        alert("Enter valid credential")
-      }
-    });
+    this.http
+      .post<User>(this.apiurl, user, { responseType: 'json' })
+      .subscribe({
+        next: (res) => {
+          const updatedUser: User = {
+            id: res.id,
+            username: res.username,
+            password: res.password,
+            role: res.role
+          };
+
+          localStorage.setItem('username', updatedUser.username);
+          localStorage.setItem("role",updatedUser.role);
+          alert('Successfully loggedIn');
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          alert('Enter valid credential');
+        },
+      });
   }
 }
